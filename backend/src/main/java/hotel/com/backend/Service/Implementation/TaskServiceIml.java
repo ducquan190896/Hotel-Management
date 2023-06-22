@@ -83,7 +83,9 @@ public class TaskServiceIml implements TaskService{
 
     @Override
     public List<Task> getTasks() {
-        return taskRepos.findAll();
+        List<Task> tasks = taskRepos.findAll();
+        tasks.sort((a, b) -> b.getDateUpdated().compareTo(a.getDateUpdated()));
+        return tasks;
     }
 
     @Override
