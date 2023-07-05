@@ -22,10 +22,10 @@ public class SocketChannelInterceptor implements ChannelInterceptor {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         assert accessor != null;
         if(accessor.getCommand().equals(StompCommand.CONNECT)) {
-            String username = accessor.getFirstNativeHeader("username");
+            // String username = accessor.getFirstNativeHeader("username");
             String token = accessor.getFirstNativeHeader("Authorization");
             System.out.println("token " + token);
-            Authentication user = socketService.authenticateMessageToken(username, token);
+            Authentication user = socketService.authenticateMessageToken( token);
             accessor.setUser(user);
         }
         return message;

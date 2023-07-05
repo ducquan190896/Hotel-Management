@@ -1,0 +1,34 @@
+{
+    "id": 1,
+    "name": "cleaning bed",
+    "location": "303",
+    "description": "the sheet is too dirty",
+    "department": {
+        "id": 1,
+        "name": "Cleaning"
+    },
+    "creator": {
+        "id": 1,
+        "username": "quan",
+        "firstname": "quan",
+        "surename": "doan",
+        "roles": [
+            "USER"
+        ]
+    },
+    "completor": {
+        "id": 1,
+        "username": "quan",
+        "firstname": "quan",
+        "surename": "doan",
+        "roles": [
+            "USER"
+        ]
+    },
+    "inProgress": true,
+    "dateCreated": null,
+    "dateUpdated": "2023-07-03 20:46",
+    "completed": false,
+    "cancelled": false,
+    "urgent": false
+}

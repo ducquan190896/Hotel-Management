@@ -1,5 +1,6 @@
 package hotel.com.backend.Service.Implementation;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class DepartmentServiceIml  implements DepartmentService{
        Department department = new Department(name);
        return departmentRepos.save(department);
 
+    }
+
+    @Override
+    public List<Department> getAll() {
+       return departmentRepos.findAll();
     }
 
     @Override

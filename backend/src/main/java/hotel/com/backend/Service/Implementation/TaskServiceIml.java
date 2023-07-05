@@ -47,23 +47,23 @@ public class TaskServiceIml implements TaskService{
         department.getTasks().add(task);
         departmentRepos.save(department);
         userRepos.save(authUser);
-        simpMessagingTemplate.convertAndSend("/tasks", task);
+        
         return task;
     }
 
     @Override
     public Task cancelTask(Long Id) {
         Users authUser = userService.getAuthUser();
-        if(!authUser.getRoles().contains(Role.MANAGER) || !authUser.getRoles().contains(Role.ADMIN)) {
-        throw new BadResultException("are not authorized to add new department");
+        Task task = checkTask(Id);
+        if(authUser.getRoles().contains(Role.MANAGER) || authUser.getRoles().contains(Role.ADMIN) || task.getCompletor().getId() == authUser.getId()) {
+            task.setCancelled(true);
+            task.setInProgress(false);
+            task.setCompleted(false);
+            task = taskRepos.save(task);
+            return task;
+       } else {
+            throw new BadResultException("are not authorized to add new department");
        }
-       Task task = checkTask(Id);
-       task.setCancelled(true);
-       task.setInProgress(false);
-       task.setCompleted(false);
-       task = taskRepos.save(task);
-       simpMessagingTemplate.convertAndSend("/tasks", task);
-       return task;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class TaskServiceIml implements TaskService{
         task.setInProgress(false);
         task.setCancelled(false);
         task = taskRepos.save(task);
-        simpMessagingTemplate.convertAndSend("/tasks", task);
+        
         return task;
     }
 
@@ -97,7 +97,6 @@ public class TaskServiceIml implements TaskService{
         task.setCompleted(false);
         task.setCancelled(false);
         task = taskRepos.save(task);
-        simpMessagingTemplate.convertAndSend("/tasks", task);
         return task;
     }
     

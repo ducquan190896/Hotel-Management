@@ -26,7 +26,7 @@ public class SocketService {
     UserService userService;
    
 
-    public Authentication authenticateMessageFromSocket(String username1, String token1) {
+    public Authentication authenticateMessageFromSocket( String token1) {
         String token = token1.replace(SecurityConstant.authorization, "");
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SecurityConstant.private_key)).build().verify(token);
         String username = decodedJWT.getSubject();
@@ -39,8 +39,8 @@ public class SocketService {
     }
  
 
-    public Authentication authenticateMessageToken(String username, String token) {
-        Authentication authenticationToken = authenticateMessageFromSocket(username, token);
+    public Authentication authenticateMessageToken(String token) {
+        Authentication authenticationToken = authenticateMessageFromSocket( token);
 
         return authenticationToken;
     }

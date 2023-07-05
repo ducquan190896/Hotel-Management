@@ -30,4 +30,13 @@ public class TaskResponse {
     private LocalDateTime dateCreated;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime dateUpdated;
+    @Override
+    public String toString() {
+        return "TaskResponse [id=" + id + ", name=" + name + ", location=" + location + ", description=" + description
+                + ", department=" + department + ", creator=" + creator + ", completor=" + completor + ", isCancelled="
+                + isCancelled + ", isCompleted=" + isCompleted + ", isUrgent=" + isUrgent + ", inProgress=" + inProgress
+                + ", dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + "]";
+    }
+
+    
 }

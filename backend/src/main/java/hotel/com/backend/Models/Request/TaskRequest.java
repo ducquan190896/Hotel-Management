@@ -21,6 +21,7 @@ public class TaskRequest {
     private String description;
     private String department;
     private boolean isUrgent;
+    private String token;
     
     public TaskRequest(String name, String location, String description, String department) {
         this.name = name;
