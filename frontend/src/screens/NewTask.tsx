@@ -4,7 +4,7 @@ import socketContext from '../Context/SocketContext';
 import { useSelector } from 'react-redux';
 import { HOST_URL, RootState } from '../Store/store';
 import { useTailwind } from 'tailwind-rn';
-import { TASK } from '../models/index.d';
+import { MESSAGE, TASK } from '../models/index.d';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import moment from 'moment';
@@ -61,14 +61,21 @@ const NewTask = () => {
   }
   const messageReceived = (payload: any) => {
       console.log(tasks)
-      const payloadTask : TASK = JSON.parse(payload.body);
+      const payloadTask : any = JSON.parse(payload.body);
       console.log("payload received :" )
       console.log(payloadTask)
-      if(payloadTask.urgent) {
-        setUrgents(prev => [payloadTask, ...prev])
-      } else {
-        setNewTasks(prev => [payloadTask, ...prev])
+
+      if (payloadTask.message === undefined) {
+        if(payloadTask.urgent) {
+          setUrgents(prev => [payloadTask, ...prev])
+        } else {
+          setNewTasks(prev => [payloadTask, ...prev])
+        }
+      } else if(payloadTask.message !== undefined && payloadTask.message === "InProgress") {
+          setNewTasks(prev => prev.filter((t : TASK) => t.id != payloadTask?.id))
+          setUrgents(prev => prev.filter((t : TASK) => t.id != payloadTask?.id))
       }
+     
 
   }
 
@@ -85,8 +92,7 @@ const NewTask = () => {
 
   const pickTask = async (id : number) => {
     try {
-          setNewTasks(prev => prev.filter((t : TASK) => t.id != id))
-          setUrgents(prev => prev.filter((t : TASK) => t.id != id))
+          
           const token = await AsyncStorage.getItem("token")
           console.log("token " + token);
           const res = await axios.put(HOST_URL + `/api/tasks/task/${id}/handleTask`, {}, {

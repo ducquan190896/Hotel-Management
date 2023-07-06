@@ -75,3 +75,7 @@ export interface TASKREQUEST {
     department: string,
     isUrgent: boolean
 }
+export interface MESSAGE {
+    id: number,
+    message: string
+}

@@ -48,10 +48,19 @@ const InProgress = () => {
   }
   const messageReceived = (payload: any) => {
       console.log(tasks)
-      const payloadTask : TASK = JSON.parse(payload.body);
+      const payloadTask : any = JSON.parse(payload.body);
       console.log("payload received :" )
       console.log(payloadTask)
-      setProgressTasks(prev => [payloadTask, ...prev])
+      
+      if (payloadTask.message === undefined) {
+          setProgressTasks(prev => [payloadTask, ...prev])
+      } else if(payloadTask.message !== undefined ) {
+          if(payloadTask.message === "Complete") {
+            setProgressTasks(prev => prev.filter((t : TASK) => t.id != payloadTask.id))   
+          } else if(payloadTask.message === "Cancel") {
+            setProgressTasks(prev => prev.filter((t : TASK) => t.id != payloadTask.id))   
+          }
+      }
   }
 
   const notConnected = () => {
@@ -77,7 +86,7 @@ const InProgress = () => {
           const data = await res.data
           // console.log("complete the task")
           // console.log(data)     
-          setProgressTasks(prev => prev.filter((t : TASK) => t.id != id))     
+          
     } catch (err) {
       console.log("no tasks")
     }
@@ -93,7 +102,7 @@ const InProgress = () => {
           const data = await res.data
           // console.log("cancel the task")
           // console.log(data)     
-          setProgressTasks(prev => prev.filter((t : TASK) => t.id != id))     
+              
     } catch (err) {
       console.log("no tasks")
     }

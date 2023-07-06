@@ -22,6 +22,7 @@ import hotel.com.backend.Mapper.TaskMapper;
 import hotel.com.backend.Models.Task;
 import hotel.com.backend.Models.Request.PickTaskRequest;
 import hotel.com.backend.Models.Request.TaskRequest;
+import hotel.com.backend.Models.Response.TaskMessage;
 import hotel.com.backend.Models.Response.TaskResponse;
 import hotel.com.backend.Service.TaskService;
 import jakarta.validation.Valid;
@@ -50,7 +51,9 @@ public class TaskController {
         // socketService.authenticateMessageToken(request.getToken());
         TaskResponse res = taskMapper.mapTaskResponse(taskService.completeTask(id));
         simpMessagingTemplate.convertAndSend("/tasks/completed", res);
-         System.out.println(res);
+        System.out.println(res);
+        TaskMessage message = new TaskMessage(id, "Complete");
+        simpMessagingTemplate.convertAndSend("/tasks/inprogress", message);
         return new ResponseEntity<TaskResponse>(res, HttpStatus.OK);
     }
     @PutMapping("/task/{id}/cancel")
@@ -59,6 +62,8 @@ public class TaskController {
         TaskResponse res = taskMapper.mapTaskResponse(taskService.cancelTask(id));
         simpMessagingTemplate.convertAndSend("/tasks/cancelled", res);
         System.out.println(res);
+        TaskMessage message = new TaskMessage(id, "Cancel");
+        simpMessagingTemplate.convertAndSend("/tasks/inprogress", message);
         return new ResponseEntity<TaskResponse>(res, HttpStatus.OK);
     }
     @PutMapping("/task/{id}/handleTask")
@@ -67,7 +72,9 @@ public class TaskController {
         // socketService.authenticateMessageToken(request.getToken());
         TaskResponse res = taskMapper.mapTaskResponse(taskService.takeChargeInTask(id));
         simpMessagingTemplate.convertAndSend("/tasks/inprogress", res);
-         System.out.println(res);
+        TaskMessage message = new TaskMessage(id, "InProgress");
+        simpMessagingTemplate.convertAndSend("/tasks/news", message);
+        System.out.println(res);
         return new ResponseEntity<TaskResponse>(res, HttpStatus.OK);
     }
     @GetMapping("/all")
