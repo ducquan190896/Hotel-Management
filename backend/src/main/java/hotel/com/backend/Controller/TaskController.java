@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hotel.com.backend.Config.SocketService;
+import hotel.com.backend.Kafka.Producers.MessageProducer;
+import hotel.com.backend.Kafka.Producers.TaskProducer;
 import hotel.com.backend.Mapper.TaskMapper;
 import hotel.com.backend.Models.Task;
 import hotel.com.backend.Models.Request.PickTaskRequest;
@@ -38,43 +40,39 @@ public class TaskController {
     SocketService socketService;
     @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
+    TaskProducer taskProducer;
+    @Autowired
+    MessageProducer messageProducer;
 
     @PostMapping("/task")
     public ResponseEntity<TaskResponse> add(@Valid @RequestBody TaskRequest req) {
         TaskResponse res = taskMapper.mapTaskResponse(taskService.add(req));
-        simpMessagingTemplate.convertAndSend("/tasks/news", res);
-         System.out.println(res);
+        taskProducer.sendNewTask(res);
         return new ResponseEntity<TaskResponse>(res, HttpStatus.CREATED);
     }
     @PutMapping("/task/{id}/complete")
     public ResponseEntity<TaskResponse> complete(@PathVariable Long id) {
-        // socketService.authenticateMessageToken(request.getToken());
         TaskResponse res = taskMapper.mapTaskResponse(taskService.completeTask(id));
-        simpMessagingTemplate.convertAndSend("/tasks/completed", res);
-        System.out.println(res);
+        taskProducer.sendCompletedTask(res);
         TaskMessage message = new TaskMessage(id, "Complete");
-        simpMessagingTemplate.convertAndSend("/tasks/inprogress", message);
+        messageProducer.sendInProgressMessage(message);
         return new ResponseEntity<TaskResponse>(res, HttpStatus.OK);
     }
     @PutMapping("/task/{id}/cancel")
     public ResponseEntity<TaskResponse> cancel(@PathVariable Long id) {
-        // socketService.authenticateMessageToken(request.getToken());
         TaskResponse res = taskMapper.mapTaskResponse(taskService.cancelTask(id));
-        simpMessagingTemplate.convertAndSend("/tasks/cancelled", res);
-        System.out.println(res);
+        taskProducer.sendCancelledTask(res);
         TaskMessage message = new TaskMessage(id, "Cancel");
-        simpMessagingTemplate.convertAndSend("/tasks/inprogress", message);
+        messageProducer.sendInProgressMessage(message);
         return new ResponseEntity<TaskResponse>(res, HttpStatus.OK);
     }
     @PutMapping("/task/{id}/handleTask")
     public ResponseEntity<TaskResponse> handleTask(@PathVariable Long id) {
-        // System.out.println(request);
-        // socketService.authenticateMessageToken(request.getToken());
         TaskResponse res = taskMapper.mapTaskResponse(taskService.takeChargeInTask(id));
-        simpMessagingTemplate.convertAndSend("/tasks/inprogress", res);
+        taskProducer.sendInProgressTask(res);
         TaskMessage message = new TaskMessage(id, "InProgress");
-        simpMessagingTemplate.convertAndSend("/tasks/news", message);
-        System.out.println(res);
+        messageProducer.sendNewMessage(message);
         return new ResponseEntity<TaskResponse>(res, HttpStatus.OK);
     }
     @GetMapping("/all")

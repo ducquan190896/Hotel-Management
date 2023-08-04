@@ -6,7 +6,7 @@ import userReducer from './reducers/userReducer';
 import DepartmentReducer from './reducers/DepartmentReducer';
 
 
-export const HOST_URL= "http://192.168.0.103:8080";
+export const HOST_URL= "http://100.76.188.137:8080";
 const initialState= {};
 
 const rootReducer = combineReducers({
