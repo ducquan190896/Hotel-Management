@@ -1,27 +1,62 @@
 version: '3'
 
 networks:
-  kafka-net:
-    name: kafka-net
+  shared-net:
     driver: bridge
 
 services:
+  app: 
+    image: quan/hotel:latest
+    build:
+      context: .
+    container_name: app
+    restart: always
+    networks:
+      - shared-net
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/hotel-management
+      - SPRING_DATASOURCE_USERNAME=quan
+      - SPRING_DATASOURCE_PASSWORD=1996
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - db
+  
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    restart: always
+    networks:
+      - shared-net
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    environment: 
+      - POSTGRES_USER=quan
+      - POSTGRES_PASSWORD=1996
+      - POSTGRES_DB=hotel-management
+    volumes:
+      - pgdata:/var/lib/postgresql/data
  
   zookeeper:
     image: zookeeper:3.7.0
     container_name: zookeeper
-    restart: "no"
+    restart: always
     networks:
-      - kafka-net
+      - shared-net
     ports:
       - "2181:2181"
 
   kafka:
     image: obsidiandynamics/kafka
     container_name: kafka
-    restart: "no"
+    restart: always
     networks:
-      - kafka-net
+      - shared-net
     ports:
       - "9092:9092"
     environment:
@@ -34,3 +69,6 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
+
+volumes:
+  pgdata: {}
