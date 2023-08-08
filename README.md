@@ -13,6 +13,7 @@ link: https://www.youtube.com/watch?v=xg3di6hDh-A
 - SpringBoot, Spring Security, Maven
 - WebSocket
 - Apache Kafka
+- Docker
 - PostgresSQL
 - React-Native
 - Typescript
