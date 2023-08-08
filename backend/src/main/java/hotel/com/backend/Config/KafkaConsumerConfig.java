@@ -3,6 +3,7 @@ import java.util.HashMap;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -21,7 +22,8 @@ import java.util.Map;
 @EnableKafka
 @Configuration
 public class KafkaConsumerConfig {
-    private static final String BOOTSTRAP_SERVERS = "localhost:9092,localhost:9093,localhost:9094";
+    @Value("${spring.kafka.bootstrap-servers}")
+    private  String BOOTSTRAP_SERVERS;
     private static final String consumerGroup = "group-task-1";
     private static final String consumerGroup2 = "group-task-2";
 

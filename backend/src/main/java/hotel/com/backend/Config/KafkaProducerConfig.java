@@ -4,6 +4,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +24,8 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaProducerConfig {
-      private static final String BOOTSTRAP_SERVERS = "localhost:9092,localhost:9093,localhost:9094";
+    @Value("${spring.kafka.bootstrap-servers}")
+    private  String BOOTSTRAP_SERVERS;
 
     @Bean("TaskProducerFactoryKafka")
     public ProducerFactory<String, TaskResponse> TaskProducerFactory() {
