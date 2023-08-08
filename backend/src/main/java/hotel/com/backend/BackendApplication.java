@@ -25,29 +25,29 @@ public class BackendApplication {
 	@Bean
 	CommandLineRunner commandLineRunner(UserRepos userRepos, DepartmentRepos departmentRepos, TaskRepos taskRepos) {
 		return args -> {
-			// Department department1 = new Department("Cleaning");
-			// Department department2 = new Department("Catering");
-			// Department department3 = new Department("Mantaining");
-			// departmentRepos.save(department1);
-			// departmentRepos.save(department2);
-			// departmentRepos.save(department3);
+			Department department1 = new Department("Cleaning");
+			Department department2 = new Department("Catering");
+			Department department3 = new Department("Mantaining");
+			departmentRepos.save(department1);
+			departmentRepos.save(department2);
+			departmentRepos.save(department3);
 
-			// Users quan = new Users("quan", new BCryptPasswordEncoder().encode("123456"), "quan", "doan", department1);
-			// quan.getRoles().add(Role.USER);
-			// Users khanh = new Users("khanh", new BCryptPasswordEncoder().encode("123456"), "khanh", "doan", department3);
-			// khanh.getRoles().add(Role.USER);
-			// Users duy = new Users("duy", new BCryptPasswordEncoder().encode("123456"), "duy", "doan", department2);
-			// duy.getRoles().add(Role.USER);
+			Users quan = new Users("quan", new BCryptPasswordEncoder().encode("123456"), "quan", "doan", department1);
+			quan.getRoles().add(Role.USER);
+			Users khanh = new Users("khanh", new BCryptPasswordEncoder().encode("123456"), "khanh", "doan", department3);
+			khanh.getRoles().add(Role.USER);
+			Users duy = new Users("duy", new BCryptPasswordEncoder().encode("123456"), "duy", "doan", department2);
+			duy.getRoles().add(Role.USER);
 
-			// userRepos.save(quan);
-			// userRepos.save(khanh);
-			// userRepos.save(duy);
+			userRepos.save(quan);
+			userRepos.save(khanh);
+			userRepos.save(duy);
 
-			// Task task1 = new Task("cleaning bed", "303", "the sheet is too dirty", department1, quan);
-			// taskRepos.save(task1);
+			Task task1 = new Task("cleaning bed", "303", "the sheet is too dirty", department1, quan);
+			taskRepos.save(task1);
 
-			// Task task2 = new Task("cleaning toilet", "506", "the sink is too wet", department3, khanh);
-			// taskRepos.save(task2);
+			Task task2 = new Task("cleaning toilet", "506", "the sink is too wet", department3, khanh);
+			taskRepos.save(task2);
 		};
 	}
 }
